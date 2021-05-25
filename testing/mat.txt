@@ -1,0 +1,31 @@
+# Not working on repl.it
+
+from matplotlib import pyplot as plt
+from matplotlib import style
+
+def pie_sentiment(neg, neu, pos, inp):
+	values = []
+	label = []
+	colour = []
+	if neg != 0:
+		values.append(neg)
+		label.append('Negative')
+		colour.append('red')
+		pass
+	if neu != 0:
+		values.append(neu)
+		label.append('Neutral')
+		colour.append('orange')
+		pass
+	if pos != 0:
+		values.append(pos)
+		label.append('Postitive')
+		colour.append('green')
+		pass
+	# y = [neg,neu,pos]
+	# label = ['Negative','Neutral','Postitive']
+	# {'neg': 0.0, 'neu': 0.655, 'pos': 0.345, 'compound': 0.6948}
+	plt.title(inp)
+	plt.pie(values, labels=label, colors=colour)
+	plt.savefig('static/pie.png')
+	plt.close()

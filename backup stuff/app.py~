@@ -1,0 +1,51 @@
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from flask import Flask, render_template, request
+from mat import pie_sentiment
+from textblob import TextBlob
+
+app = Flask(__name__)
+analyzer = SentimentIntensityAnalyzer()
+
+
+@app.route('/sentiment')
+def sentiment_main():
+	text = request.args.get('text')
+	analysis = analyzer.polarity_scores(text)
+	return analysis
+	pass
+
+@app.route('/sentiment/val')
+def sentiment_val():
+	text = request.args.get('text')
+	analysis = analyzer.polarity_scores(text)
+	analysis = analysis['compound']
+
+	if analysis >= 0.05:
+		return "Positive"
+		pass
+	elif analysis  > -0.05 and analysis < 0.05: 
+		return "Neutral"
+		pass
+	elif analysis <= -0.05:
+		return 'Negative'
+		pass
+	else:
+		return "An error occured please try again"
+
+@app.route('/sentiment/chart')
+def sentiment_img():
+	text = request.args.get('text')
+	text = TextBlob(text)
+	text = text.correct()
+	analysis = analyzer.polarity_scores(text)
+	pie_sentiment(analysis['neg'], analysis['neu'], analysis['pos'])
+	return render_template('image.html')
+	pass
+
+@app.route('/sentiment/chart_correctionFalse')
+def sentiment_img_non():
+	text = request.args.get('text')
+	analysis = analyzer.polarity_scores(text)
+	pie_sentiment(analysis['neg'], analysis['neu'], analysis['pos'])
+	return render_template('image.html')
+	pass
